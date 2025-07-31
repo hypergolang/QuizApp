@@ -13,26 +13,33 @@
 
     const currentQuestionIndex = ref(0);
 
+    const numberOfCorrectAnswers = ref(0)
+
     // const questionStatus = ref(`${currentQuestionIndex.value}/${quiz.questions.length}`)
 
     // watch(() => currentQuestionIndex.value, () => {
     //     questionStatus.value = `${currentQuestionIndex.value}/${quiz.questions.length}`
     // })
 
-    const questionStatus = computed(
-        () => `${currentQuestionIndex.value}/${quiz.questions.length}`
-    );
-    const barPercentage = computed(
-        () => `${(currentQuestionIndex.value / quiz.questions.length) * 100}%`
-    );
+    const questionStatus = computed(() => `${currentQuestionIndex.value}/${quiz.questions.length}`);
+    const barPercentage = computed(() => `${(currentQuestionIndex.value / quiz.questions.length) * 100}%`);
+
+    const onOptionSelected = (isCorrect) => {
+        if (isCorrect) {
+            numberOfCorrectAnswers.value++
+        }
+
+        currentQuestionIndex.value++
+    }
 </script>
 
 <template>
     <div>
         <QuizHeader :questionStatus="questionStatus" :barPercentage="barPercentage" />
         <div>
-            <Question :question="quiz.questions[currentQuestionIndex]" />
+            <Question :question="quiz.questions[currentQuestionIndex]" @selectOption="onOptionSelected" />
         </div>
+        {{ numberOfCorrectAnswers }}
         <button @click="currentQuestionIndex++">Next Question</button>
     </div>
 </template>
